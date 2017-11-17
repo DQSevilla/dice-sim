@@ -16,6 +16,15 @@ number=input()
 
 primelist=primes(int(number))
 
-import itertools
+full=[]
 for subset in itertools.permutations(primelist, len(primelist)):
-    print(subset)
+    full.append(subset)
+
+#print(set(full))
+full2=[]
+for i in range(0, len(full)):
+    for L in range(0, len(full[i])+1):
+      for su in itertools.combinations(full[i], L):
+        full2.append(su)
+
+print(set(full2))
