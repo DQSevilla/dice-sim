@@ -3,12 +3,13 @@ def findeflips():
 	strings=file.readlines()
 	found=0
 	for i in strings:
-		if "$4:" in i:
-			if i.split(":")[2] is "":
+		i=i.split(":");
+		if "4" is i[0]:
+			if i[2] is "":
 				print("found but empty")
 				print("calling function to fill empty spaces with data")
 			else:
-				print(float(i.split(":")[2]))
+				print(float(i[2]))
 			found=1
 			break
 	if found is 0:
