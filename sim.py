@@ -12,7 +12,7 @@ def flip_coin():
     """ returns 0 for heads, 1 for tails """
     return 0 if random.random() < 0.5 else 1
 
-def general_algo_helper(sides):
+def general_algorithm(sides):
     """ Implements the general roll simulation algorithm.
         Returns the number that was "rolled" by the sim """
     roll = 1
@@ -43,11 +43,11 @@ def general_algo_helper(sides):
             change = True
 
     if not change:
-        return general_algo_helper(sides)
+        return general_algorithm(sides)
 
     return roll
 
-def general_algo_debug_helper(sides, numflips):
+def general_algorithm_debug(sides, numflips=0):
     """ Core code for the debug version of the general algorithm.
         Returns a tupple (roll, flip, numflips) where sides is
         the result of the simulated roll, flip is an array of coin
@@ -85,37 +85,49 @@ def general_algo_debug_helper(sides, numflips):
             change = True
 
     if not change:
-        return general_algo_debug_helper(sides, numflips + sum(count))
+        return general_algorithm_debug(sides, numflips + sum(count))
 
     return (roll, flip, numflips + sum(count))
 
-def general_algorithm_debug(sides, debug=True):
-    """ Debug version of the general roll algorithm """
+FUNC_LIST = {"general": general_algorithm,
+             "general_d": general_algorithm_debug}
+
+def roll_die_debug(sides, algo="general", debug=True):
+    """ Debug version of generic die rolling sim """
+    if algo not in FUNC_LIST:
+        raise ValueError("invalid algorithm chosen")
     if not isinstance(sides, int):
-        raise TypeError("Error: 'sides' must be of type int")
+        raise TypeError("'sides' must be of type int")
     if sides < 1:
-        raise ValueError("Error: 'sides' must be positive")
+        raise ValueError("'sides' must be positive")
     if sides == 1:
         return 1
     if sides == 2:
-        return flip_coin()
+        return flip_coin() + 1
     if debug:
-        return general_algo_debug_helper(sides, 0)
+        algo += "_d"
 
-    return general_algo_helper(sides)
+    try:
+        return FUNC_LIST[algo](sides)
+    except RuntimeError:
+        raise RuntimeError("simulation took too many flips")
 
-def general_algorithm(sides):
-    """ General algorithm for die simulation """
-    return general_algorithm_debug(sides, False)
+    return None
+
+def roll_die(sides, algo="general"):
+    """ Implements the given die simulation """
+    return roll_die_debug(sides, algo, False)
 
 def roll_die_test(sides):
     """ Testing die rolls with debug versions """
-    print(general_algorithm_debug(sides))
+    res = roll_die_debug(sides)
+    if res != None:
+        print(res)
 
 def main():
     """ script driver """
     for _ in range(0, 10):
-        roll_die_test(4)
+        roll_die_test(3)
 
 # running
 main()
