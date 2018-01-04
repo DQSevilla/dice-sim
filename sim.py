@@ -43,7 +43,7 @@ def general_algorithm(sides):
             change = True
 
     if not change:
-        return general_algorithm(sides)
+        return None
 
     return roll
 
@@ -85,7 +85,7 @@ def general_algorithm_debug(sides, numflips=0):
             change = True
 
     if not change:
-        return general_algorithm_debug(sides, numflips + sum(count))
+        return (None, None, numflips + sum(count))
 
     return (roll, flip, numflips + sum(count))
 
@@ -104,15 +104,19 @@ def roll_die_debug(sides, algo="general", debug=True):
         return 1
     if sides == 2:
         return flip_coin() + 1
+
     if debug:
         algo += "_d"
+        data = (None, None, 0)
+        while data[0] is None:
+            data = FUNC_LIST[algo](sides, data[2]) #pylint: disable-msg=too-many-function-args
+        return data
 
-    try:
-        return FUNC_LIST[algo](sides)
-    except RuntimeError:
-        raise RuntimeError("simulation took too many flips")
+    roll = None
+    while roll is None:
+        roll = FUNC_LIST[algo](sides)
 
-    return None
+    return roll
 
 def roll_die(sides, algo="general"):
     """ Implements the given die simulation """
@@ -127,7 +131,7 @@ def roll_die_test(sides):
 def main():
     """ script driver """
     for _ in range(0, 10):
-        roll_die_test(3)
+        roll_die_test(12)
 
 # running
 main()
