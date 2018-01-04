@@ -53,6 +53,7 @@ This is an exercise and experiment in finding a lower and upper bound on the exp
 
 - __Procedure__: Simulate a D-i using any of the above methods, where i is the smallest factor of n such that i > 1. Now split the D-n into i dice, each with n/i sides, and choose the die corresponding to the number rolled with the D-i (rolling a 1 corresponds to `1, ..., n/i`, a 2 corresponds to `n/i + 1, ..., 2n/i`, etc until n). Keep splitting until the number of sides of the current die is prime, which you can simulate using the previously discussed methods.
   - e.g. To simulate a D-30, flip a coin. If heads, simulate a standard D-15, else, simulate a D-15 numbered 16 through 30. To simulate the D-15, either simulate a D-16, or, simulate a D-3, and with that result, choose between the three possible D-5s, numbered either `1, ..., 5`, `6, ..., 10`, or `11, ..., 15`. Finally, since 5 is prime, simulate it using a previous method.
+> Note that if in a given D-i simulation an invalid sequence is generated, you may simply redo the D-i roll, by the nature of the split
 
 - __Why it works__: The language used in the procedure might sound a bit confusing but it's quite simple. If there is a smallest number that evenly divides n other than 1, then we can split our D-n into one of several possible dice, just like we did when splitting by two. Probabilities are preserved because each die split into is equally likely to be chosen, and the rest of the method relies on previously discussed ones, which we have also shown to achieve 1/n probabilities.
 
