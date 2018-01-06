@@ -1,21 +1,31 @@
-def findeflips():
-	file = open("minflips","r") 
-	strings=file.readlines()
-	found=0
-	for i in strings:
-		i=i.split(":");
-		if "4" is i[0]:
-			if i[2] is "":
-				print("found but empty")
-				print("calling function to fill empty spaces with data")
-			else:
-				print(float(i[2]))
-			found=1
-			break
-	if found is 0:
-		print("not there")
-		print("calling function to fill text file to that point, then")
-		print("calling function to fill empyt spaces with data")
-	file.close()
+#program to, given a number n representing the number of sides of a die, gives the expected number of coin flips needed
+#to simulate rolling said n-sidded die
 
-findeflips()
+def e_flips_sim(n):
+	i=n
+	while not isPow2(i):
+		i=i+1
+
+	if n==2:
+		return 1
+
+	if n%2 == 0:
+		return 1+e_flips_sim(n//2)
+	else:
+		l=float('inf')
+		for m in range(n+1,i+1):
+			if l>((m/n)*e_flips_sim(m)):
+				l=((m/n)*e_flips_sim(m))
+		return l
+
+def isPow2(i):
+	if i<=1:
+		if i==1:
+			return 1
+		else:
+			return 0
+
+	return isPow2(i/2)
+
+for i in range(2,100):
+	print(str(i)+" -> "+str(e_flips_sim(i)))
