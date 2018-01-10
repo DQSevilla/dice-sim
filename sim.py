@@ -89,49 +89,69 @@ def general_algorithm_debug(sides, numflips=0):
 
     return (roll, flip, numflips + sum(count))
 
+def binary_split(sides):
+    """ Precondition: sides is a power of two """
+    low, high, res = 1, sides, 0
+    while low < high:
+        if flip_coin():
+            high /= 2
+            res = low
+        else:
+            low += high / 2
+            res = high
+    assert not isinstance(res, float)
+    return res
+
 FUNC_LIST = {"general": general_algorithm,
              "general_d": general_algorithm_debug}
 
 def roll_die_debug(sides, algo="general", debug=True):
-    """ Debug version of generic die rolling sim """
+    """ Debug version of die rolling simulation """
     if algo not in FUNC_LIST:
         raise ValueError("invalid algorithm chosen")
     if not isinstance(sides, int):
-        raise TypeError("'sides' must be of type int")
+        raise TypeError("'sides' must be an int")
     if sides < 1:
         raise ValueError("'sides' must be positive")
+
+    result = (None, None, 0)
     if sides == 1:
-        return 1
+        result = (1, None, 0)
     if sides == 2:
-        return flip_coin() + 1
+        flip = flip_coin()
+        result = (flip + 1, [COIN[flip]], 1)
 
     if debug:
         algo += "_d"
-        data = (None, None, 0)
-        while data[0] is None:
-            data = FUNC_LIST[algo](sides, data[2]) #pylint: disable-msg=too-many-function-args
-        return data
+        while result[0] is None:
+            result = FUNC_LIST[algo](sides, result[2]) #pylint: disable-msg=too-many-function-args
+        return result
 
-    roll = None
+    roll = result[0]
     while roll is None:
         roll = FUNC_LIST[algo](sides)
-
     return roll
 
 def roll_die(sides, algo="general"):
     """ Implements the given die simulation """
     return roll_die_debug(sides, algo, False)
 
-def roll_die_test(sides):
-    """ Testing die rolls with debug versions """
-    res = roll_die_debug(sides)
-    if res != None:
-        print(res)
+def average_flips(sides, num_rolls, algo="general"):
+    """ Averages the number of flips taken for given die sides,
+        simulation algorithm, and number of rolls """
+    total_flips = 0
+    for _ in range(0, num_rolls):
+        total_flips += roll_die_debug(sides, algo)[2]
+    return total_flips / num_rolls
+
+def roll_die_test():
+    """ Performs various tests of the dice rolling simulations """
+    freq = [average_flips(i, 10000) for i in range(1, 8)]
+    print(freq)
 
 def main():
     """ script driver """
-    for _ in range(0, 10):
-        roll_die_test(12)
+    roll_die_test()
 
 # running
 main()
