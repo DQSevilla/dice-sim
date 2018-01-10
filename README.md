@@ -25,7 +25,7 @@ This is an exercise and experiment in finding a lower and upper bound on the exp
 
 - __Why it works__: Can be proven correct by observing how the sample space for the overall sequence of flips is transformed when invalid sequences are removed, and valid complementary sequences (switch heads and tails) are combined. To convince yourself, look at the D-3 case.
 
-- __Efficiency__: This algorithm is not very efficient as it's expected number of flips is __2<sup>n-1</sup>__.
+- __Efficiency__: This algorithm is not very efficient. It has an upper bound of __2<sup>n-1</sup>__ expected flips, but in fact becomes relatively more efficient than that as n increases, because of preemptively restarting after an invalid sequence, before fully finishing that sequence.
 
 ### The obvious simulation of a D-2<sup>k</sup>:
 - Clearly if you wish to simulate a n = 2<sup>k</sup> sided die, k &isin; __&#8469;__, you can simply use successive coin flips to split the working sample space in half each time. I call this _binary splitting_.
