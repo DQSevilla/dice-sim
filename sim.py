@@ -146,7 +146,7 @@ def average_flips(sides, num_rolls, algo="general"):
 
 def roll_die_test():
     """ Performs various tests of the dice rolling simulations """
-    freq = [average_flips(i, 10000) for i in range(1, 8)]
+    freq = [average_flips(i, 10000) for i in range(1, 10)]
     print(freq)
 
 def main():
