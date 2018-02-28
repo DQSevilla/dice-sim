@@ -11,16 +11,24 @@ def all_factors(num):
 memoize={1:0}
 
 def e_flips_sim(n):
-
 	if n in memoize:
 		return memoize[n]
 
 	if n%2 == 0:
-		return 1+e_flips_sim(n//2)
+		return 1+flip_helper(n//2)
 	else:
 		factors=all_factors(n)
 		poss_min=(((n+1)/n)*flip_helper(n+1))
 		
+		i=n
+		while not (i and (not(i & (i - 1)))):
+			i=i+1
+
+		for i in range(n+2,i+1):
+			val=(i/n)*flip_helper(i)
+			if poss_min>val:
+				poss_min=val
+
 		for i in factors:
 			val=(flip_helper(i)+flip_helper(n//i))
 			if poss_min>val:
@@ -32,7 +40,7 @@ def flip_helper(i):
 	memoize[i]=val
 	return val
 
-for i in range(1,21):
+for i in range(1,1025):
 	var=flip_helper(i)
 	print(str(i)+" -> "+str(var))
 #print(memoize[i])
